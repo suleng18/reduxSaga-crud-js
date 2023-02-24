@@ -1,4 +1,8 @@
-import React, { useEffect } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
+import { Box, Button, Container, Pagination } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,16 +10,12 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Box, Button, Container } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteUserStart, loadUsersStart } from '../redux/actions';
 import { Stack } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { deleteUserStart, loadUsersStart } from '../redux/actions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,29 +40,40 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { users } = useSelector((state) => state.data);
 
   useEffect(() => {
-    dispatch(loadUsersStart({ page: 1, perPage: 5 }));
-  }, []);
+    dispatch(loadUsersStart({ page: 1, perPage: 6 }));
+  }, [dispatch]);
 
-  const handleDeleteUser = (id) => {
+  const handleDeleteUser = (userId) => {
     if (window.confirm('Do you want to delete this user?')) {
-      dispatch(deleteUserStart(id));
+      dispatch(deleteUserStart(userId));
       toast.success('Delete User Successfully');
     }
   };
 
-  const handleEditUser = (id) => {
-    navigate(`/editUser/${id}`);
+  const handleEditUser = (userId) => {
+    navigate(`/editUser/${userId}`);
   };
 
-  const handleDetailsUser = (id) => {
-    navigate(`/userInfo/${id}`);
+  const handleDetailsUser = (userId) => {
+    navigate(`/userInfo/${userId}`);
+  };
+
+  const handlePagination = (even, value) => {
+    dispatch(loadUsersStart({ page: value, perPage: 6 }));
   };
 
   return (
-    <Container>
+    <Container
+      sx={{
+        marginTop: '20px',
+        backgroundColor: '#e3f2fd',
+        borderRadius: '20px',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
@@ -72,8 +83,12 @@ const Home = () => {
       >
         <Button
           variant="contained"
-          sx={{ marginTop: '35px', textTransform: 'capitalize', bgcolor: '#452c7e' }}
-          // onClick={() => navigate('/addUser')}
+          sx={{
+            marginTop: '35px',
+            bgcolor: 'primary',
+            padding: '10px 40px',
+          }}
+          onClick={() => navigate('/addUser')}
         >
           Add User
         </Button>
@@ -101,8 +116,12 @@ const Home = () => {
                   </StyledTableCell>
                   <StyledTableCell align="left">{user.name}</StyledTableCell>
                   <StyledTableCell align="left">{user.email}</StyledTableCell>
-                  <StyledTableCell align="left">{user.gender}</StyledTableCell>
-                  <StyledTableCell align="left">{user.status}</StyledTableCell>
+                  <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                    {user.gender}
+                  </StyledTableCell>
+                  <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                    {user.status}
+                  </StyledTableCell>
 
                   <StyledTableCell>
                     <Stack
@@ -138,6 +157,10 @@ const Home = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Stack spacing={4} sx={{ alignItems: 'center', padding: '30px 0' }}>
+        <Pagination count={6} onChange={handlePagination} color="primary" />
+      </Stack>
     </Container>
   );
 };

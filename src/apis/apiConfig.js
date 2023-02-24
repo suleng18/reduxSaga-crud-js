@@ -37,7 +37,3 @@ export const deleteUserApi = async (userId) =>
       Authorization: `Bearer ${token}`,
     },
   });
-
-// import axios from 'axios';
-
-// export const loadUserApi = async () => axios.get('http://localhost:5000/users');

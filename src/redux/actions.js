@@ -19,6 +19,7 @@ export const loadUsersError = (error) => ({
 // Create
 export const createUserStart = (user) => ({
   type: types.CREATE_USER_START,
+  payload: user,
 });
 
 export const createUserSuccess = () => ({
