@@ -41,7 +41,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { users } = useSelector((state) => state.data);
+  const { users, loading } = useSelector((state) => state.data);
 
   useEffect(() => {
     dispatch(loadUsersStart({ page: 1, perPage: 6 }));
@@ -65,6 +65,23 @@ const Home = () => {
   const handlePagination = (even, value) => {
     dispatch(loadUsersStart({ page: value, perPage: 6 }));
   };
+
+  if (loading)
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '200px' }}>
+        <Box
+          sx={{
+            display: 'inline-block',
+            width: '50px',
+            height: '50px',
+            borderRadius: '100px',
+            border: '5px solid blue',
+            borderTopColor: 'transparent',
+            animation: 'App-logo-spin 1.2s infinite',
+          }}
+        ></Box>
+      </Box>
+    );
 
   return (
     <Container

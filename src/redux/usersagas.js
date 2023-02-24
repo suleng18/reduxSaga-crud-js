@@ -1,5 +1,4 @@
 import * as types from './actionType';
-
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 
 import {
@@ -49,6 +48,7 @@ function* onCreateUserStartAsync(data) {
 }
 
 function* onEditUserStartAsync(data) {
+  console.log('🚀 ~ data:', data);
   try {
     const response = yield call(editUserApi, data.payload.idUrl.id, data.payload.user);
     if (response.status === 200) {
