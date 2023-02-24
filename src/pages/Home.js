@@ -66,119 +66,129 @@ const Home = () => {
     dispatch(loadUsersStart({ page: value, perPage: 6 }));
   };
 
-  if (loading)
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '200px' }}>
+  return (
+    <>
+      {loading && (
         <Box
           sx={{
-            display: 'inline-block',
-            width: '50px',
-            height: '50px',
-            borderRadius: '100px',
-            border: '5px solid blue',
-            borderTopColor: 'transparent',
-            animation: 'App-logo-spin 1.2s infinite',
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%,-50%)',
           }}
-        ></Box>
-      </Box>
-    );
+        >
+          <Box
+            sx={{
+              display: 'inline-block',
+              width: '50px',
+              height: '50px',
+              borderRadius: '100px',
+              border: '6px solid #4525d9',
+              borderTopColor: 'transparent',
+              animation: 'App-logo-spin 1.2s infinite',
+            }}
+          ></Box>
+        </Box>
+      )}
 
-  return (
-    <Container
-      sx={{
-        marginTop: '20px',
-        backgroundColor: '#e3f2fd',
-        borderRadius: '20px',
-      }}
-    >
-      <Box
+      <Container
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '50px',
+          marginTop: '20px',
+          backgroundColor: '#e3f2fd',
+          borderRadius: '20px',
         }}
       >
-        <Button
-          variant="contained"
+        <Box
           sx={{
-            marginTop: '35px',
-            bgcolor: 'primary',
-            padding: '10px 40px',
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '50px',
           }}
-          onClick={() => navigate('/addUser')}
         >
-          Add User
-        </Button>
-      </Box>
+          <Button
+            variant="contained"
+            sx={{
+              marginTop: '35px',
+              bgcolor: 'primary',
+              padding: '10px 40px',
+            }}
+            onClick={() => navigate('/addUser')}
+          >
+            Add User
+          </Button>
+        </Box>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="left">ID</StyledTableCell>
-              <StyledTableCell align="left">Name</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
-              <StyledTableCell align="left">Gender</StyledTableCell>
-              <StyledTableCell align="left">Status</StyledTableCell>
-              <StyledTableCell align="center">Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="left">ID</StyledTableCell>
+                <StyledTableCell align="left">Name</StyledTableCell>
+                <StyledTableCell align="left">Email</StyledTableCell>
+                <StyledTableCell align="left">Gender</StyledTableCell>
+                <StyledTableCell align="left">Status</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
-            {users &&
-              users.map((user) => (
-                <StyledTableRow key={user.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {user.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">{user.name}</StyledTableCell>
-                  <StyledTableCell align="left">{user.email}</StyledTableCell>
-                  <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
-                    {user.gender}
-                  </StyledTableCell>
-                  <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
-                    {user.status}
-                  </StyledTableCell>
+            <TableBody>
+              {users &&
+                users.map((user) => (
+                  <StyledTableRow key={user.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {user.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{user.name}</StyledTableCell>
+                    <StyledTableCell align="left">{user.email}</StyledTableCell>
+                    <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                      {user.gender}
+                    </StyledTableCell>
+                    <StyledTableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                      {user.status}
+                    </StyledTableCell>
 
-                  <StyledTableCell>
-                    <Stack
-                      sx={{ display: 'flex', justifyContent: 'center' }}
-                      direction="row"
-                      spacing={2}
-                    >
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleEditUser(user.id)}
+                    <StyledTableCell>
+                      <Stack
+                        sx={{ display: 'flex', justifyContent: 'center' }}
+                        direction="row"
+                        spacing={2}
                       >
-                        <EditIcon></EditIcon>
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDeleteUser(user.id)}
-                      >
-                        <DeleteIcon></DeleteIcon>
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="info"
-                        onClick={() => handleDetailsUser(user.id)}
-                      >
-                        <PersonIcon></PersonIcon>
-                      </Button>
-                    </Stack>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleEditUser(user.id)}
+                        >
+                          <EditIcon></EditIcon>
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDeleteUser(user.id)}
+                        >
+                          <DeleteIcon></DeleteIcon>
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="info"
+                          onClick={() => handleDetailsUser(user.id)}
+                        >
+                          <PersonIcon></PersonIcon>
+                        </Button>
+                      </Stack>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      <Stack spacing={4} sx={{ alignItems: 'center', padding: '30px 0' }}>
-        <Pagination count={6} onChange={handlePagination} color="primary" />
-      </Stack>
-    </Container>
+        <Stack spacing={4} sx={{ alignItems: 'center', padding: '30px 0' }}>
+          <Pagination count={6} onChange={handlePagination} color="primary" />
+        </Stack>
+      </Container>
+    </>
   );
 };
 
