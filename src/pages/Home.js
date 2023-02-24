@@ -15,6 +15,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Loading from '../components/Loading';
 import { deleteUserStart, loadUsersStart } from '../redux/actions';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -68,30 +69,7 @@ const Home = () => {
 
   return (
     <>
-      {loading && (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'inline-block',
-              width: '50px',
-              height: '50px',
-              borderRadius: '100px',
-              border: '6px solid #4525d9',
-              borderTopColor: 'transparent',
-              animation: 'App-logo-spin 1.2s infinite',
-            }}
-          ></Box>
-        </Box>
-      )}
+      {loading && <Loading></Loading>}
 
       <Container
         sx={{
