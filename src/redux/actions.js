@@ -37,8 +37,9 @@ export const editUserStart = (userInfo) => ({
   payload: userInfo,
 });
 
-export const editUserSuccess = () => ({
+export const editUserSuccess = (data) => ({
   type: types.EDIT_USER_SUCCESS,
+  payload: data,
 });
 
 export const editUserError = (error) => ({

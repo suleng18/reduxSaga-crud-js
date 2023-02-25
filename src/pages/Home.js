@@ -11,12 +11,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Stack } from '@mui/system';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
 import { deleteUserStart, loadUsersStart } from '../redux/actions';
+import EditUser from './EditUser';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,14 +40,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Home = () => {
+  // const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [idSelected, setIdSelected] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const { users, loading } = useSelector((state) => state.data);
 
   useEffect(() => {
     dispatch(loadUsersStart({ page: 1, perPage: 6 }));
-  }, [dispatch]);
+  }, []);
 
   const handleDeleteUser = (userId) => {
     if (window.confirm('Do you want to delete this user?')) {
@@ -56,7 +60,8 @@ const Home = () => {
   };
 
   const handleEditUser = (userId) => {
-    navigate(`/editUser/${userId}`);
+    setOpenDialog(true);
+    setIdSelected(userId);
   };
 
   const handleDetailsUser = (userId) => {
@@ -166,6 +171,13 @@ const Home = () => {
           <Pagination count={6} onChange={handlePagination} color="primary" />
         </Stack>
       </Container>
+      {openDialog && (
+        <EditUser
+          idSelected={idSelected}
+          openDialog={openDialog}
+          handleClose={() => setOpenDialog(false)}
+        />
+      )}
     </>
   );
 };

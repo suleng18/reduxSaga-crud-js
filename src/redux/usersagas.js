@@ -26,6 +26,7 @@ function* onLoadUsersStartAsync({ payload: { page, perPage } }) {
 }
 
 function* onDeleteUserStartAsync(data) {
+  console.log('🚀 ~ data:', data);
   try {
     const response = yield call(deleteUserApi, data.payload);
     if (response.status === 204) {
@@ -48,11 +49,10 @@ function* onCreateUserStartAsync(data) {
 }
 
 function* onEditUserStartAsync(data) {
-  console.log('🚀 ~ data:', data);
   try {
-    const response = yield call(editUserApi, data.payload.idUrl.id, data.payload.user);
+    const response = yield call(editUserApi, data.payload.idSelected, data.payload.user);
     if (response.status === 200) {
-      yield put(editUserSuccess());
+      yield put(editUserSuccess(response.data));
     }
   } catch (error) {
     yield put(editUserError(error.message));

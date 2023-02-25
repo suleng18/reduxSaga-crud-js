@@ -8,15 +8,18 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createUserStart } from '../redux/actions';
+import { editUserStart, loadUsersStart } from '../redux/actions';
 
-export default function AddUser() {
+export default function EditUser() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { users } = useSelector((state) => state.data);
+  const { id } = useParams();
 
   const [user, setUser] = useState({
     name: '',
@@ -25,18 +28,23 @@ export default function AddUser() {
     status: 'active',
   });
 
-  const handleSubmit = () => {
+  const handleEdit = () => {
     if (!user.name || !user.email) return;
-    dispatch(createUserStart(user));
-    setUser({
-      name: '',
-      email: '',
-      gender: '',
-      status: '',
-    });
-    navigate('/');
-    toast.success('Add User Successfully');
+    dispatch(editUserStart({ id, user }));
+    setTimeout(() => navigate('/'), 1000);
+    toast.success('Edit User Successfully');
   };
+
+  useEffect(() => {
+    if (users) {
+      const detailUser = users.find((item) => item.id === +id);
+      setUser({ ...detailUser });
+    }
+  }, [id, users]);
+
+  useEffect(() => {
+    dispatch(loadUsersStart({ page: 1, perPage: 50 }));
+  }, [dispatch]);
 
   return (
     <Container
@@ -48,7 +56,7 @@ export default function AddUser() {
       }}
     >
       <Typography variant="h4" align="center" mb={4} fontWeight="500" color="primary">
-        Add User
+        Edit User
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Box
@@ -60,10 +68,9 @@ export default function AddUser() {
           autoComplete="off"
         >
           <TextField
-            id="outlined-error-helper-text"
             label="Name"
             type="text"
-            value={user.name}
+            value={user.name || ''}
             onChange={(event) => setUser({ ...user, name: event.target.value })}
             placeholder="Name"
           />
@@ -71,7 +78,7 @@ export default function AddUser() {
           <TextField
             label="Email"
             type="email"
-            value={user.email}
+            value={user.email || ''}
             onChange={(event) => setUser({ ...user, email: event.target.value })}
             placeholder="Email"
           />
@@ -83,7 +90,7 @@ export default function AddUser() {
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
-              value={user.gender}
+              value={user.gender || ''}
               onChange={(event) => setUser({ ...user, gender: event.target.value })}
             >
               <FormControlLabel value="female" control={<Radio />} label="Female" />
@@ -95,7 +102,7 @@ export default function AddUser() {
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
-              value={user.status}
+              value={user.status || ''}
               onChange={(event) => setUser({ ...user, status: event.target.value })}
             >
               <FormControlLabel value="active" control={<Radio />} label="Active" />
@@ -109,9 +116,9 @@ export default function AddUser() {
               variant="contained"
               color="primary"
               sx={{ width: '150px' }}
-              onClick={handleSubmit}
+              onClick={() => handleEdit()}
             >
-              Add User
+              Edit User
             </Button>
             <Button
               variant="contained"
@@ -119,7 +126,7 @@ export default function AddUser() {
               sx={{ width: '150px' }}
               onClick={() => navigate('/')}
             >
-              Back
+              Go Back
             </Button>
           </Box>
         </Box>

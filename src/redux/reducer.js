@@ -31,6 +31,12 @@ const usersReducer = (state = initialState, action) => {
       };
 
     case types.EDIT_USER_SUCCESS:
+      const newData = action.payload;
+      const index = state.users.findIndex((item) => item.id === newData.id);
+      // const dataPush = state.users.splice(index, 1, newData);
+
+      state.users[index] = newData;
+
       return {
         ...state,
         loading: false,

@@ -1,27 +1,75 @@
-import Box from '@mui/material/Box';
+import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import {
+  Box,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { editUserStart, loadUsersStart } from '../redux/actions';
+import { toast } from 'react-toastify';
 
-export default function EditUser() {
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+export default function EditUser(props) {
+  const { openDialog, handleClose, idSelected } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { users } = useSelector((state) => state.data);
-  const idUrl = useParams();
 
-  const [user, setUser] = useState({
+  const [user, setUser] = React.useState({
     name: '',
     email: '',
     gender: 'female',
@@ -30,107 +78,118 @@ export default function EditUser() {
 
   const handleEdit = () => {
     if (!user.name || !user.email) return;
-    dispatch(editUserStart({ idUrl, user }));
+    dispatch(editUserStart({ idSelected, user }));
     setTimeout(() => navigate('/'), 1000);
     toast.success('Edit User Successfully');
+    handleClose();
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (users) {
-      const detailUser = users.find((item) => item.id === +idUrl.id);
-      setUser({ ...detailUser });
+      const detailUser = users.find((item) => item.id === +idSelected);
+      setUser(detailUser);
     }
-  }, [idUrl.id, users]);
+  }, [idSelected, users]);
 
-  useEffect(() => {
-    dispatch(loadUsersStart({ page: 1, perPage: 50 }));
-  }, [dispatch]);
+  // React.useEffect(() => {
+  //   dispatch(loadUsersStart({ page: 1, perPage: 6 }));
+  // }, [dispatch]);
 
   return (
-    <Container
-      sx={{
-        marginTop: '20px',
-        padding: '50px 50px 100px',
-        backgroundColor: '#e3f2fd',
-        borderRadius: '20px',
-      }}
+    <BootstrapDialog
+      onClose={handleClose}
+      aria-labelledby="customized-dialog-title"
+      open={openDialog}
     >
-      <Typography variant="h4" align="center" mb={4} fontWeight="500" color="primary">
+      {/* <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
         Edit User
-      </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Box
-          component="form"
+      </BootstrapDialogTitle> */}
+
+      <DialogContent dividers>
+        <Container
           sx={{
-            '& > :not(style)': { m: 2, width: '60ch' },
+            // marginTop: '60px',
+            // padding: '50px 50px 100px',
+            backgroundColor: '#e3f2fd',
+            borderRadius: '20px',
           }}
-          noValidate
-          autoComplete="off"
         >
-          <TextField
-            label="Name"
-            type="text"
-            value={user.name || ''}
-            onChange={(event) => setUser({ ...user, name: event.target.value })}
-            placeholder="Name"
-          />
-          <br />
-          <TextField
-            label="Email"
-            type="email"
-            value={user.email || ''}
-            onChange={(event) => setUser({ ...user, email: event.target.value })}
-            placeholder="Email"
-          />
-          <br />
+          <Typography variant="h4" align="center" mb={4} fontWeight="500" color="primary">
+            Edit User
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box
+              component="form"
+              sx={{
+                '& > :not(style)': { m: 2, width: '60ch' },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                label="Name"
+                type="text"
+                value={user.name || ''}
+                onChange={(event) => setUser({ ...user, name: event.target.value })}
+                placeholder="Name"
+              />
+              <br />
+              <TextField
+                label="Email"
+                type="email"
+                value={user.email || ''}
+                onChange={(event) => setUser({ ...user, email: event.target.value })}
+                placeholder="Email"
+              />
+              <br />
 
-          <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              value={user.gender || ''}
-              onChange={(event) => setUser({ ...user, gender: event.target.value })}
-            >
-              <FormControlLabel value="female" control={<Radio />} label="Female" />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-            </RadioGroup>
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={user.gender || ''}
+                  onChange={(event) => setUser({ ...user, gender: event.target.value })}
+                >
+                  <FormControlLabel value="female" control={<Radio />} label="Female" />
+                  <FormControlLabel value="male" control={<Radio />} label="Male" />
+                </RadioGroup>
 
-            <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              value={user.status || ''}
-              onChange={(event) => setUser({ ...user, status: event.target.value })}
-            >
-              <FormControlLabel value="active" control={<Radio />} label="Active" />
-              <FormControlLabel value="inactive" control={<Radio />} label="Inactive" />
-            </RadioGroup>
-          </FormControl>
-          <br />
+                <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={user.status || ''}
+                  onChange={(event) => setUser({ ...user, status: event.target.value })}
+                >
+                  <FormControlLabel value="active" control={<Radio />} label="Active" />
+                  <FormControlLabel value="inactive" control={<Radio />} label="Inactive" />
+                </RadioGroup>
+              </FormControl>
+              <br />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ width: '150px' }}
-              onClick={() => handleEdit()}
-            >
-              Edit User
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ width: '150px' }}
-              onClick={() => navigate('/')}
-            >
-              Go Back
-            </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '150px' }}
+                  onClick={() => handleEdit()}
+                >
+                  Edit User
+                </Button>
+              </Box>
+            </Box>
           </Box>
-        </Box>
-      </Box>
-    </Container>
+        </Container>
+      </DialogContent>
+
+      {/* <DialogActions>
+        <Button autoFocus onClick={handleClose}>
+          Save changes
+        </Button>
+      </DialogActions> */}
+    </BootstrapDialog>
   );
 }
