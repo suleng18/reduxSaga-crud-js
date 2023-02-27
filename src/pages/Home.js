@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
 import { deleteUserStart, loadUsersStart } from '../redux/actions';
@@ -40,7 +40,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Home = () => {
-  // const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [idSelected, setIdSelected] = useState(null);

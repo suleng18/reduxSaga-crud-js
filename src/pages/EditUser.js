@@ -1,14 +1,4 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
 import {
   Box,
   Container,
@@ -19,10 +9,19 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { editUserStart, loadUsersStart } from '../redux/actions';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { editUserStart } from '../redux/actions';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -91,25 +90,15 @@ export default function EditUser(props) {
     }
   }, [idSelected, users]);
 
-  // React.useEffect(() => {
-  //   dispatch(loadUsersStart({ page: 1, perPage: 6 }));
-  // }, [dispatch]);
-
   return (
     <BootstrapDialog
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={openDialog}
     >
-      {/* <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        Edit User
-      </BootstrapDialogTitle> */}
-
       <DialogContent dividers>
         <Container
           sx={{
-            // marginTop: '60px',
-            // padding: '50px 50px 100px',
             backgroundColor: '#e3f2fd',
             borderRadius: '20px',
           }}
@@ -184,12 +173,6 @@ export default function EditUser(props) {
           </Box>
         </Container>
       </DialogContent>
-
-      {/* <DialogActions>
-        <Button autoFocus onClick={handleClose}>
-          Save changes
-        </Button>
-      </DialogActions> */}
     </BootstrapDialog>
   );
 }

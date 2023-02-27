@@ -1,11 +1,9 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import UserInfo from './pages/UserInfo';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from './pages/AddUser';
-import EditUser from './pages/EditUser';
 
 function App() {
   return (
@@ -14,7 +12,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/addUser" element={<AddUser />} />
         {/* <Route path="/editUser/:id" element={<EditUser />} /> */}
-        <Route path="/userInfo/:id" element={<UserInfo />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>
